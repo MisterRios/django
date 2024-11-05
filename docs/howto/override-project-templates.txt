@@ -1,0 +1,156 @@
+==============================================================
+How to override project and app file structure using templates
+==============================================================
+
+Django has a default project and file structure it creates when one runs the
+commands :djadmin:`startproject` and :djadmin:`startapp`
+
+For ``startproject`` it will create the ``manage.py`` file, along with a
+folder named after the ``project_name`` parameter passed in the initial
+command.
+
+Take for example, a typical command run inside a folder titled
+``myproject``:
+
+   .. code-block:: shell
+   $ django-admin startproject myproject .
+
+The resulting file stucture is based on the default template-file
+structure in
+:source:`django/conf/project_templates`. There, each file has the extension
+`.py-tpl` to denote the file as a template. Each template contains template
+tags that end up being filled from the command and django version context.
+The template context is detailed at the end of the documentation for
+:djadmin:`startproject`.
+
+The resulting files all have the
+`.py` file extension and are ready to be used. Any
+
+.. code-block:: none
+    myproject/
+        manage.py
+        myproject/
+            __init__.py
+            asgi.py
+            settings.py
+            urls.py
+            wsgi.py
+
+A similar thing happens when you run `startapp`. Both commands inherit from the
+same ``TemplateCommand`` class (in
+:source:`django/core/management/templates.py`), but they discern between app and project.
+
+A typical command to initialize an app:
+
+   .. code-block:: shell
+   $ python manage.py startapp myapp .
+
+This creates an app in the current directory with the default file structure found in
+:source:`django/conf/app_templates`. As above, each template  has the extension
+`.py-tpl` to denote the file as a template, but is copied over as a python file. Each template contains template
+tags for the variables that will be passed.
+
+.. code-block:: none
+    myapp/
+        __init__.py
+        admin.py
+        apps.py
+        migrations/
+            __init__.py
+        models.py
+        tests.py
+        views.py
+
+
+## Creating your own Project and App Templates
+
+The default project and app file structures are the ones suggested by
+django, but not the only ones that can be used. Because django does not require
+a specific file structure for the `settings` or ``urls`` files, you can create
+your own structure. The only thing to watch out for is that the imports and
+references to other modules is correct. As long as the files find each other,
+it doesn't matter where they are placed.
+
+For convenience, python files used in the templates use the suffix `.py-tpl`.
+During the process of creating the project or app files, the suffix is changed
+to `.py`. However, this is not absolutely necessary, since any files with the
+`.py` suffix can have the context changed by the templating engine if they
+contain template tags that are variables.
+
+The folders that contain your templates can have any naming convention.
+`new_django_template` is as valid as `files_structure`. You can even have them
+as a directory, as a zip file or a compressed or uncompressed archive. In
+addition, you can pull them from the web as long as they are in a valid format.
+
+There is, however, a specific naming convention that needs to be followed in order
+to have your project name as the folder name enclosing the settings files.  In
+the project template, the folder that uses the name you pass in the
+``createproject`` command must have the name ``project_name``. This name is
+then replaced by the name you enter when you run the command. In the example at
+the top of the page the template folder `project_name`  would be replaced with
+``myapp``.
+
+For the ``createapp`` command, this is not necessary, as the folder enclosing
+the files ``admin.py`` and ``urls.py`` is the folder of the app template, and
+the command will take the contents of this folder, and move them to a folder
+with the name passed in the command.
+
+Neither the `startproject` nor the `startapp` commands generate the code in the
+files. They only copy existing templated files and insert the context. When the
+files are copied from a custom project template, they are copied directly
+without any code modifications from the default templates. It is up to the
+developer to make sure that the template file structure and code actually
+works, and that they contain up-to-date code, settings, and variables for the
+version of django being used. When upating the Django version, it is
+recommended to double-check against the default project or app template files
+to see what has been added or changed. It is highly recommended to start a
+django project first, make sure that the files work together, and then create a
+template based on that file structure and content.
+
+ As a example, a flat Django project can look like this, with all of the files
+ normally found in the project folder outside that folder, and at the same
+ level as `manage.py`::
+
+.. code-block:: none
+    myproject/
+        asgi.py
+        manage.py
+        settings.py
+        urls.py
+        wsgi.py
+
+
+In this particular instance, to make the files work with each other, you'd have
+to adapt the settings reference in ``manage.py`` to refer to ``settings``
+instead of ``myproject.settings`` since settings is no longer in the created
+``myproject`` folder, but at the same level as ``manage.py``. Likewise in
+``settings.py``, you'd have to change ``ROOT_URLCONF`` from
+``"myproject.urls"`` to simply ``"urls"`` and ``WSGI_APPLICATION`` from
+``"myproject.wsgi.application"`` to ``"wsgi.application"``.
+
+
+For the `startapp` command, there is less that can be customized since it is a
+single folder with files and a migrations folder within. If certain files are
+not needed they can be left out. For example, if no models will be used, the
+`models.py` file and `migrations` can be left out. In this case the `admin.py`
+file could also be left off. Conversely, if you always use custom managers, you
+could add a `managers.py` file to your custom structure to make sure the file
+is always there.
+
+## Initializing your templates
+
+To do this, you'd have to point the ``startproject`` command to where the
+templates or files are located. For instance:
+
+   .. code-block:: shell
+   python manage.py startapp myapp . --template /path/to/template_files
+
+## About Non-python files
+
+Files that aren't python or python-template files
+
+
+
+
+
+
