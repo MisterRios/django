@@ -2,25 +2,35 @@
 How to override project and app file structure using templates
 ==============================================================
 
-Django has a default project and file structure it creates when one runs the
-commands :djadmin:`startproject` and :djadmin:`startapp`
 
-For ``startproject`` it will create the ``manage.py`` file, along with a
+Introduction
+============
+
+The first command you will run when setting up a django project is
+:djadmin:`startproject`. Having set up your project, you will then start
+creating your apps with :djadmin:`startapp`. Each of these commands will create
+a file structure that is based on default templates within the Django
+repository.
+
+However, you can create your own templates so that when you run
+``startproject`` or ``startapp`` it creates the app and project structure that
+is best for you.
+
+What the defaults look like
+===========================
+
+The command ``startproject`` will create the ``manage.py`` file, along with a
 folder named after the ``project_name`` parameter passed in the initial
-command.
-
-Take for example, a typical command run inside a folder titled
-``myproject``:
+command. Here the command is run with the project name as ``myproject``:
 
    .. code-block:: shell
    $ django-admin startproject myproject .
 
 The resulting file stucture is based on the default template-file
-structure in
-:source:`django/conf/project_templates`. There, each file has the extension
-`.py-tpl` to denote the file as a template. Each template contains template
-tags that end up being filled from the command and django version context.
-The template context is detailed at the end of the documentation for
+structure in :source:`django/conf/project_templates`. There, each file has the
+extension `.py-tpl` to denote the file as a template. Each template contains
+template tags that end up being filled from the command and django version
+context. The template context is detailed at the end of the documentation for
 :djadmin:`startproject`.
 
 The resulting files all have the
@@ -40,7 +50,7 @@ A similar thing happens when you run `startapp`. Both commands inherit from the
 same ``TemplateCommand`` class (in
 :source:`django/core/management/templates.py`), but they discern between app and project.
 
-A typical command to initialize an app:
+A typical command to initialize an app with the name ``myapp``:
 
    .. code-block:: shell
    $ python manage.py startapp myapp .
@@ -62,7 +72,8 @@ tags for the variables that will be passed.
         views.py
 
 
-## Creating your own Project and App Templates
+Creating your own Project and App Templates
+===========================================
 
 The default project and app file structures are the ones suggested by
 django, but not the only ones that can be used. Because django does not require
@@ -71,11 +82,6 @@ your own structure. The only thing to watch out for is that the imports and
 references to other modules is correct. As long as the files find each other,
 it doesn't matter where they are placed.
 
-For convenience, python files used in the templates use the suffix `.py-tpl`.
-During the process of creating the project or app files, the suffix is changed
-to `.py`. However, this is not absolutely necessary, since any files with the
-`.py` suffix can have the context changed by the templating engine if they
-contain template tags that are variables.
 
 The folders that contain your templates can have any naming convention.
 `new_django_template` is as valid as `files_structure`. You can even have them
