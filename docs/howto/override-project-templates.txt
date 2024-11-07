@@ -143,7 +143,41 @@ file could also be left off. Conversely, if you always use custom managers, you
 could add a `managers.py` file to your custom structure to make sure the file
 is always there.
 
-## Initializing your templates
+For convenience, python files used in the templates use the suffix `.py-tpl`.
+During the process of creating the project or app files, the suffix is changed
+to `.py`. However, this is not absolutely necessary, since any files with the
+`.py` suffix can have the context changed by the templating engine if they
+contain template tags that are variables.
+
+#TODO Quick reminder of what happens when the template engine replaces variables
+
+Using non-Python files
+----------------------
+
+Since the commands both copy
+#TODO
+Mention that you can have all kinds of files, for example, if you want to have
+a template that contains frontend and backend files, and can even use template tags to
+be filled from the project context in the non-python files.
+
+#TODO
+Mention the command {% exclude %} to exclude portions or complete files that
+should not be templated
+
+
+Using your templates
+====================
+
+#TODO
+discuss what commands you need to run and get what you want
+non-python files have to have the extensions added to parameter ``-extensions``
+
+# Any other non-python files that don't have extensions or are only one
+instance of that type of file i.e. ``Dockerfile`` have to be included in --name
+
+# exclude directories (but not file) that should not be templated
+
+
 
 To do this, you'd have to point the ``startproject`` command to where the
 templates or files are located. For instance:
@@ -151,7 +185,7 @@ templates or files are located. For instance:
    .. code-block:: shell
    python manage.py startapp myapp . --template /path/to/template_files
 
-## About Non-python files
+Other Tips
 
 Files that aren't python or python-template files
 
