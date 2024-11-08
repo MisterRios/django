@@ -143,26 +143,46 @@ file could also be left off. Conversely, if you always use custom managers, you
 could add a `managers.py` file to your custom structure to make sure the file
 is always there.
 
+Template suffixes
+-----------------
+
 For convenience, python files used in the templates use the suffix `.py-tpl`.
 During the process of creating the project or app files, the suffix is changed
 to `.py`. However, this is not absolutely necessary, since any files with the
 `.py` suffix can have the context changed by the templating engine if they
 contain template tags that are variables.
 
-#TODO Quick reminder of what happens when the template engine replaces variables
 
-Using non-Python files
+Templating non-Python files
 ----------------------
 
-Since the commands both copy
-#TODO
-Mention that you can have all kinds of files, for example, if you want to have
-a template that contains frontend and backend files, and can even use template tags to
-be filled from the project context in the non-python files.
+Since the commands that use the templates just copy files, you can have any
+type of file in the project or app template. This is especially useful if you
+want to set up frontend or infrastructure files within the project template.
+
+Any type of file is supported as long as it doesn't end with ``.pyo``,
+``.pyc``, or ``.py.class``. Any type of directory is supported as long as it
+doesn't begin with a period ``.`` (hidden directory) or is a ``__pycache__``
+file.
+
+You can even use the template engine to fill in ``{{ project_name }}`` in
+places where the project name would be commonly used by other apps, such as in
+Kubernetes or Dockerfiles. To use the template engine with these files,
+however, you would have to list the file extensions in the command when you
+start the project or the app after the tag ``--extension``. For any files
+without extensions, or for files in which only one instance should be
+templated, those filenames can be listed after the tag ``--name``.
+
+   .. code-block:: shell
+   $ django-admin startproject myproject . --extension py,json,toml --name
+   Dockerfile,README.md,.gitignore
+
+Excluding files ()
 
 #TODO
 Mention the command {% exclude %} to exclude portions or complete files that
 should not be templated
+#TODO Quick reminder of what happens when the template engine replaces variables
 
 
 Using your templates
