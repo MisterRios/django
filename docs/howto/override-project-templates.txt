@@ -57,8 +57,9 @@ A typical command to initialize an app with the name ``myapp``:
 
 This creates an app in the current directory with the default file structure found in
 :source:`django/conf/app_templates`. As above, each template  has the extension
-`.py-tpl` to denote the file as a template, but is copied over as a python file. Each template contains template
-tags for the variables that will be passed.
+`.py-tpl` to denote the file as a template, but is copied over as a python
+file. Each template contains template tags for the variables that will be
+passed.
 
 .. code-block:: none
     myapp/
@@ -168,7 +169,7 @@ contain template tags that are variables.
 
 
 Templating non-Python files
-----------------------
+---------------------------
 
 Since the commands that use the templates just copy files, you can have any
 type of file in the project or app template. This is especially useful if you
@@ -181,50 +182,55 @@ file.
 
 You can even use the template engine to fill in ``{{ project_name }}`` in
 places where the project name would be commonly used by other apps, such as in
-Kubernetes or Dockerfiles. To use the template engine with these files,
-however, you would have to list the file extensions in the command when you
-start the project or the app after the tag ``--extension``. For any files
-without extensions, or for files in which only one instance should be
-templated, those filenames can be listed after the tag ``--name``.
+Kubernetes or Dockerfiles.
 
-   .. code-block:: shell
-   $ django-admin startproject myproject . --extension py,json,toml --name
-   Dockerfile,README.md,.gitignore
 
-Excluding files ()
+Excluding parts of files from templating
+----------------------------------------
 
-#TODO
-Mention the command {% exclude %} to exclude portions or complete files that
-should not be templated
-#TODO Quick reminder of what happens when the template engine replaces variables
+The templating engine will overwrite any context variables found in the project
+or app template. Sometimes, for the purposes of documentation, you want to
+leave the variables visible in the producted app or project structure. To have
+``{{ django_version }}`` or ``{{ project_name }}`` still visible in the
+resulting file, you can wrap that part of the file, or even the whole file with
+the template tags {% verbatim %} and {% endverbatim %}. The templating engine
+will end up removing them from the finished file.
 
 
 Using your templates
 ====================
 
-#TODO
-discuss what commands you need to run and get what you want
-non-python files have to have the extensions added to parameter ``-extensions``
-
-# Any other non-python files that don't have extensions or are only one
-instance of that type of file i.e. ``Dockerfile`` have to be included in --name
-
-# exclude directories (but not file) that should not be templated
-
-
-
-To do this, you'd have to point the ``startproject`` command to where the
-templates or files are located. For instance:
+The basic command to start your project using your new template is:
 
    .. code-block:: shell
-   python manage.py startapp myapp . --template /path/to/template_files
+   $ django-admin startproject myproject .
 
-Other Tips
+To add non-python files to the templating engine, add the names to the
+``extension`` flag like so:
 
-Files that aren't python or python-template files
+   .. code-block:: shell
+   $ django-admin startproject myproject . --extension js,toml
 
+So now all javascript and toml files will be run through the templating engine
+to replace any variables.
 
+If you are using any non-python files that you need run through the templating
+engine that do not have extensions, such as ``Dockerfile`` or ``.gitignore``,
+or for files with extensions in which not all should be templated, you can add
+them individually after the ``name`` flag:
 
+   .. code-block:: shell
+   $ django-admin startproject myproject . --name Dockerfile,.gitignore
 
+To exclude any directories from being affected by the templating engine, you
+can use the ``exclude`` flag and they will be removed from the folders to be
+templated.
 
+   .. code-block:: shell
+   $ django-admin startproject myproject . --exclude frontend,reference
 
+The flag usage above holds true for ``python manage.py startapp .``, but,
+instead, you would be working on the app level instead of the project level.
+
+For more information, you can visit the documentation for
+:djadmin:`startproject` and :djadmin:`startapp`.
