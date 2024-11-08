@@ -82,11 +82,13 @@ your own structure. The only thing to watch out for is that the imports and
 references to other modules is correct. As long as the files find each other,
 it doesn't matter where they are placed.
 
-
 The folders that contain your templates can have any naming convention.
 `new_django_template` is as valid as `files_structure`. You can even have them
 as a directory, as a zip file or a compressed or uncompressed archive. In
 addition, you can pull them from the web as long as they are in a valid format.
+
+File and Folder naming conventions
+----------------------------------
 
 There is, however, a specific naming convention that needs to be followed in order
 to have your project name as the folder name enclosing the settings files.  In
@@ -100,6 +102,19 @@ For the ``createapp`` command, this is not necessary, as the folder enclosing
 the files ``admin.py`` and ``urls.py`` is the folder of the app template, and
 the command will take the contents of this folder, and move them to a folder
 with the name passed in the command.
+
+However, you can leverage the app name or project name if you have a file or
+folder that needs to use the name. Because this substitution happens using
+Python's string ``replace`` function, you can have something like a separate
+settings folder in your template with the name ``project_name_settings`` and
+the folder name will be changed, as in the above example to ``myproject_settings``.
+The same is true for files with ``project_name`` as part of their name. For
+apps, you should have folders or files with ``app_name`` within their name. In
+our example, ``app_name`` would be replaced by ``myapp`` and ``app_name_utilities``
+would be replaced by ``myapp_utilities``.
+
+File Structure of the templates
+-------------------------------
 
 Neither the `startproject` nor the `startapp` commands generate the code in the
 files. They only copy existing templated files and insert the context. When the
@@ -133,7 +148,6 @@ instead of ``myproject.settings`` since settings is no longer in the created
 ``settings.py``, you'd have to change ``ROOT_URLCONF`` from
 ``"myproject.urls"`` to simply ``"urls"`` and ``WSGI_APPLICATION`` from
 ``"myproject.wsgi.application"`` to ``"wsgi.application"``.
-
 
 For the `startapp` command, there is less that can be customized since it is a
 single folder with files and a migrations folder within. If certain files are
